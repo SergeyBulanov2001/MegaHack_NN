@@ -106,6 +106,8 @@ venv.bak/
 
 # CLIENT
 
+
+idea/
 # compiled output
 /client/dist
 /client/tmp
