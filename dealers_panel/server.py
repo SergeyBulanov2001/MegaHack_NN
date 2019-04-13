@@ -89,7 +89,10 @@ def closing_stock(token, id):
     if nickname == ():
         return '{"type": "error", "message": "token error"}'
 
-    c.execute('' % (nickname[0], id))
+    c.execute("UPDATE Stocks SET stats='closed' WHERE dealer_id= %s and stock_id= %s" % (nickname[0], id))
+    conn.commit()
+
+    return '{"type": "success"}'
 
 
 @app.route('/<token>/tariffs')
@@ -113,4 +116,4 @@ def tariffs(token):
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='192.168.10.53', port = 5001)
+    app.run(debug=True)
