@@ -95,13 +95,12 @@ def tariffs(token):
 
     except:
         return '[]'
-
     answer = []
 
     for i in data:
         answer.append({"id": i[0], "tariff_name": i[1]})
 
-    return str(answer).replace("'", "'")
+    return str(answer).replace("'", '"')
 
 
 if __name__ == '__main__':
