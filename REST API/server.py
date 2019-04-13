@@ -52,7 +52,7 @@ def checkConditions(MSISDN, stock_id):
 def checkExistence(MSISDN):
     cmd = 'SELECT usernumber FROM OrdersInfo WHERE usernumber = %d' % int(MSISDN)
     c.execute(cmd)
-    if c.fetchone()[0] != None:
+    if c.fetchone() == ():
         return False
     else:
         return True

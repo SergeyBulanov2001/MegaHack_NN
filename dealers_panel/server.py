@@ -114,6 +114,22 @@ def tariffs(token):
 
     return str(answer).replace("'", '"')
 
+@app.route('/<token>/orders')
+def requestOrders(token):
+    id = check_token(token)[0]
+    if id == ():
+        return '{"type": "error", "message": "token error"}'
+
+    cmd = "SELECT * FROM OrdersInfo WHERE dealer_id = %d" % int(id)
+    c.execute(cmd)
+    a = c.fetchall()
+    answer = []
+    for obj in a:
+        answer.append({"id": obj[0], "getDate": obj[1], "usernumber": obj[2], "orderInfo": obj[4], "result": obj[5], "finishDate": obj[6]})
+
+    return str(answer).replace("'", '"')
+
+requestOrders('9a2RR8qlrf1i2fu74MJZKnJo5RiSwnV7')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False, host='192.168.10.53', port = 5001)

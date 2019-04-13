@@ -32,8 +32,8 @@ def Inserter():
             else:
                 status = 'succes!'
 
-            cmd = "INSERT INTO OrdersInfo(getDate, usernumber, dealer_id, orderInfo, result) VALUES ('%s', '%s', %d, '%s', '%s')" % (
-                obj[0], obj[1], int(obj[2]), obj[3], status
+            cmd = "INSERT INTO OrdersInfo(getDate, usernumber, dealer_id, orderInfo, result, finishDate) VALUES ('%s', '%s', %d, '%s', '%s', '%s')" % (
+                obj[0], obj[1], int(obj[2]), obj[3], status, datetime.strftime(datetime.now(), "%Y.%m.%d %H:%M:%S")
             )
             c.execute(cmd)
             conn.commit()
