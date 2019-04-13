@@ -26,7 +26,7 @@ def authorization(nickname, password):
     data = c.fetchone()
 
     if data == None:
-        return '{"type": "error", "message":"wrong login or password"}'
+        return '{"type": "error", "message":"Неправильный логин или пароль"}'
 
     return '{"type": "success", "token":"%s"}' % data[2]
 
@@ -64,4 +64,4 @@ def stock_add(token, name, services, conditions):
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='192.168.42.21')
+    app.run(debug=True, host='192.168.10.53')

@@ -13,10 +13,10 @@ c = conn.cursor(buffered=True)
 
 app = Flask(__name__)
 
-@app.route('/api/addorder/usernumber=<usernumber>&order=<order>&status=<status>')
-def addOrderToDB(usernumber, order, status):
+@app.route('/api/addorder/usernumber=<usernumber>&order=<order>&status=<status>&dealer_id=<dealer_id>')
+def addOrderToDB(usernumber, order, status, dealer_id):
     dInfo = datetime.strftime(datetime.now())
-    cmd = "INSERT INTO OrdersInfo(getDate, usernumber, orderInfo, result) VALUES ('%s', '%s', '%s', '%s')" %(dInfo, usernumber, order, status)
+    cmd = "INSERT INTO OrdersInfo(getDate, usernumber, orderInfo, result,dealer_id) VALUES ('%s', '%s', '%s', '%s', %s)" %(dInfo, usernumber, order, status, dealer_id)
     c.execute(cmd)
     cmd = "SELECT id FROM OrdersInfo WHERE getDate = '%s' AND usernumber = '%s' AND orderInfo = '%s'" %(dInfo, usernumber, order)
     c.execute(cmd)
@@ -31,10 +31,24 @@ def checkOrder(id):
     result = c.fetchone()
     return result
 
-def sdjfkdsj():
-    cmd = "SELECT nickname FROM dealers WHERE token='%s'" % ('222')
+@app.route('/api/getorderinfo/token=<token>')
+def orderListing(token):
+    id = GetIdByToken(token)
+    cmd = "SELECT * FROM OrdersInfo WHERE id='%s'" % id
     c.execute(cmd)
-    print(c.fetchone())
+    matching = c.fetchall()
+    result = '['
+    for obj in matching:
+        result = result+'{'+'id: '+ str(obj[0]) + ', date:' + str(obj[6]) + ', order: ' + str(obj[4]) + ', status:' + str(obj[5]) + '}, '
+    result = result.replace(result[-2], '')
+    result = result + ']'
+    return result
 
-sdjfkdsj()
 
+def GetIdByToken(token):
+    cmd = "SELECT nickname FROM dealers WHERE token='%s'" % str(token)
+    c.execute(cmd)
+    matching = c.fetchone()[0]
+    return matching
+
+orderListing('9a2RR8qlrf1i2fu74MJZKnJo5RiSwnV7')
