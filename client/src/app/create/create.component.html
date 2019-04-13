@@ -1,3 +1,71 @@
-<p>
-  create works!
-</p>
+<div class="header">
+  <div class="header__Left-side">
+    <button class="logout fas fa-sign-out-alt" (click)="logout()"></button>
+    <h2 class="dealer">dealer#<span class="dealer__id">{{ dealerId }}</span></h2>
+  </div>
+  <h2 class="header__title">Создание акции</h2>
+</div>
+<p class="error">{{ error }}</p>
+<div class="name">
+  <h3 class="name__title">Название</h3>
+  <input type="text" [(ngModel)]="name">
+</div>
+<div class="services">
+  <h3 class="section__title">Услуги</h3>
+  <label class="checkbox">
+    <input type="checkbox" [(ngModel)]="isCalls">
+    <span></span>
+    <p>Пакет звонков</p>
+    <input type="text" [(ngModel)]="calls">
+    <p>Минут</p>
+  </label>
+  <label class="checkbox">
+    <input type="checkbox" [(ngModel)]="isSMS">
+    <span></span>
+    <p>Пакет сообщений</p>
+    <input type="text" [(ngModel)]="sms">
+  </label>
+  <label class="checkbox">
+    <input type="checkbox" [(ngModel)]="isInternet">
+    <span></span>
+    <p>Пакет трафика</p>
+    <input type="text" [(ngModel)]="internet">
+    <p>Гб</p>
+  </label>
+  <label class="checkbox">
+    <input type="checkbox" [(ngModel)]="isSale">
+    <span></span>
+    <p>Скидка</p>
+    <input type="text" [(ngModel)]="sale">
+    <p>%</p>
+  </label>
+</div>
+<div class="conditions">
+  <h3 class="section__title">Условия подключения</h3>
+  <label class="checkbox">
+    <p>Тариф</p>
+    <div class="select">
+      <select name="tariff" id="tariff" [(ngModel)]="tariff">
+        <option [value]="tariff.id" *ngFor="let tariff of tariffs">{{ tariff.tariff_name }}</option>
+      </select>
+    </div>
+  </label>
+  <label class="checkbox">
+    <input type="checkbox" [(ngModel)]="isBalance">
+    <span></span>
+    <p>Баланс</p>
+    <input type="text" [(ngModel)]="balance">
+    <p>Руб.</p>
+  </label>
+  <label class="checkbox">
+    <input type="checkbox" [(ngModel)]="isDate">
+    <span></span>
+    <p>Дней с момента регистрации</p>
+    <input type="text" [(ngModel)]="date">
+  </label>
+  <div class="buttons">
+    <button class="back" (click)="back()">Отмена</button>
+    <button class="create" (click)="create()">Создать</button>
+  </div>
+
+</div>

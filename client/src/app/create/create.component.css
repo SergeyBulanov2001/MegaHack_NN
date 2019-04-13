@@ -1,0 +1,276 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dealer {
+  font-size: 25px;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.header__title {
+  font-size: 25px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.error {
+  color: #F68077;
+  margin: 10px 0;
+  margin-top: 60px;
+}
+
+.name {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  width: 50%;
+}
+
+.name__title {
+  margin: 0;
+  font-weight: 600;
+  font-size: 25px;
+}
+
+.services {
+  margin-top: 40px;
+}
+
+.conditions {
+  margin-top: 40px;
+}
+
+.services,
+.conditions {
+  font-size: 20px;
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+}
+
+.section__title {
+  margin: 0;
+  font-size: 25px;
+  font-weight: 600;
+  margin-bottom: 30px;
+}
+
+/* CHECKBOX */
+
+.checkbox {
+  display: inline-flex;
+  cursor: pointer;
+  align-items: center;
+}
+
+.checkbox:not(:first-of-type) {
+  margin-top: 20px;
+}
+
+.checkbox p {
+  margin: 0;
+  line-height: 22px;
+  margin-left: 5px;
+  white-space: nowrap;
+}
+
+.checkbox p:not(:first-of-type) {
+  margin-left: 20px;
+}
+
+.checkbox>input[type=checkbox] {
+  position: absolute;
+  cursor: pointer;
+  opacity: 0;
+  left: 0
+}
+
+.checkbox>input[type=checkbox]:checked+span:before {
+  border: 1px solid #389df7;
+  background: #389df7
+}
+
+.checkbox>input[type=checkbox]:checked+span:after {
+  border-color: #fff
+}
+
+.checkbox>input[type=checkbox]:disabled+span:before {
+  background-color: #ebefef;
+  border: 1px solid #ebefef
+}
+
+.checkbox>input[type=checkbox]:disabled:checked+span:after {
+  border-color: #fff
+}
+
+.checkbox>input[type=checkbox]:disabled:not(:checked)+span:after {
+  border-color: #ebefef
+}
+
+.checkbox>span {
+  position: relative;
+  padding-left: 30px;
+  cursor: pointer;
+  -webkit-transition: all .1s;
+  transition: all .1s;
+  height: 22px;
+}
+
+.checkbox>span:after,
+.checkbox>span:before {
+  position: absolute;
+  content: '';
+  -webkit-transition: all .1s;
+  transition: all .1s
+}
+
+.checkbox>span:before {
+  border-radius: 4px;
+  left: 0;
+  width: 20px;
+  height: 20px
+}
+
+.checkbox>span:before {
+  background-color: #fff
+}
+
+.checkbox>span:before {
+  border: 1px solid #ebefef
+}
+
+.checkbox>span:after {
+  top: 3px;
+  left: 8px;
+  width: 4px;
+  height: 10px;
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+  border-style: solid;
+  border-width: 0 3px 3px 0
+}
+
+.checkbox>span:after {
+  border-color: #fff
+}
+
+.checkbox:focus>span:before,
+.checkbox:hover>span:before {
+  border-color: #389df7;
+}
+
+/* INPUT */
+input[type=text] {
+  height: 29px;
+  width: 100%;
+  padding-left: 10px;
+  box-sizing: border-box;
+  border: 1px solid #dbe2ea;
+  border-radius: 4px;
+  display: block;
+  margin: 0 auto;
+  outline: none;
+  transition: border 0.2s;
+  margin-left: 25px;
+}
+
+input[type=text]:focus {
+  border-color: #389df7;
+}
+
+/* SELECT */
+.select {
+  margin-left: 25px;
+  position: relative;
+  flex: 1;
+}
+
+.select>select {
+  width: 100%;
+  font-size: 13px;
+  padding: 7px 10px;
+  outline: 0;
+  cursor: pointer;
+  border-radius: 5px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none
+}
+
+.select>select {
+  background-color: #fff
+}
+
+.select>select {
+  border: 1px solid #dbe2ea
+}
+
+.select>select::-ms-expand {
+  display: none
+}
+
+.select:after {
+  content: "";
+  padding: 4px;
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg)
+}
+
+.select:after {
+  border-right: 1px solid #363636;
+  border-bottom: 1px solid #363636
+}
+
+/* BUTTONS */
+
+.buttons {
+  display: inline-flex;
+  justify-content: space-between;
+  margin-top: 30px;
+}
+
+button {
+  width: 48%;
+  padding: 14px;
+  text-align: center;
+  border-radius: 4px;
+  border: none;
+  outline: none;
+  background-color: #389df7;
+  font-size: 15px;
+  color: #fff;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #2f85cf;
+}
+
+button.logout {
+  width: auto;
+}
+
+.header__Left-side {
+  display: inline-flex;
+  align-items: center;
+}
+
+.header__Left-side .dealer {
+  margin-left: 20px;
+}
+
+.back {
+  background-color: #f68077;
+}
+
+.back:hover {
+  background-color: #e47169;
+}
