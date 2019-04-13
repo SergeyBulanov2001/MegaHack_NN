@@ -2,6 +2,7 @@ import mysql.connector
 from datetime import datetime
 from flask import Flask
 from flask_cors import CORS
+import random, threading
 
 conn = mysql.connector.connect(
     host='192.168.10.53',
@@ -11,44 +12,43 @@ conn = mysql.connector.connect(
 
 c = conn.cursor(buffered=True)
 
+orders = []
+
 app = Flask(__name__)
 
-@app.route('/api/addorder/usernumber=<usernumber>&order=<order>&status=<status>&dealer_id=<dealer_id>')
-def addOrderToDB(usernumber, order, status, dealer_id):
-    dInfo = datetime.strftime(datetime.now())
-    cmd = "INSERT INTO OrdersInfo(getDate, usernumber, orderInfo, result,dealer_id) VALUES ('%s', '%s', '%s', '%s', %s)" %(dInfo, usernumber, order, status, dealer_id)
-    c.execute(cmd)
-    cmd = "SELECT id FROM OrdersInfo WHERE getDate = '%s' AND usernumber = '%s' AND orderInfo = '%s'" %(dInfo, usernumber, order)
-    c.execute(cmd)
-    conn.commit()
-    matching = c.fetchall()[-1][0]
-    return matching
-
-@app.route('/api/getorderinfo/id=<id>')
-def checkOrder(id):
-    cmd = "SELECT * FROM OrdersInfo WHERE id=%d" %(id)
-    c.execute(cmd)
-    result = c.fetchone()
-    return result
-
-@app.route('/api/getorderinfo/token=<token>')
-def orderListing(token):
-    id = GetIdByToken(token)
-    cmd = "SELECT * FROM OrdersInfo WHERE id='%s'" % id
-    c.execute(cmd)
-    matching = c.fetchall()
-    result = '['
-    for obj in matching:
-        result = result+'{'+'id: '+ str(obj[0]) + ', date:' + str(obj[6]) + ', order: ' + str(obj[4]) + ', status:' + str(obj[5]) + '}, '
-    result = result.replace(result[-2], '')
-    result = result + ']'
-    return result
+@app.route('/api/addordertoquerry/usernumber=<usernumber>&dealer_id=<dealer_id>&orderinfo=<orderinfo>')
+def addOrderToQuerry(usernumber, dealer_id, orderinfo):
+    getDate = datetime.strftime(datetime.now(), "%Y.%m.%d %H:%M:%S")
+    orders.append([getDate, usernumber, dealer_id, orderinfo])
+    return 'success'
 
 
-def GetIdByToken(token):
-    cmd = "SELECT nickname FROM dealers WHERE token='%s'" % str(token)
-    c.execute(cmd)
-    matching = c.fetchone()[0]
-    return matching
+def Inserter():
+    while True:
+        for obj in orders:
+            failChance = random.randint(0,9)
+            if failChance == 1:
+                status = 'error!'
+            else:
+                status = 'succes!'
 
-orderListing('9a2RR8qlrf1i2fu74MJZKnJo5RiSwnV7')
+            cmd = "INSERT INTO OrdersInfo(getDate, usernumber, dealer_id, orderInfo, result, finishDate) VALUES ('%s', '%s', %d, '%s', '%s', '%s')" % (
+                obj[0], obj[1], int(obj[2]), obj[3], status, datetime.strftime(datetime.now(), "%Y.%m.%d %H:%M:%S")
+            )
+            c.execute(cmd)
+            conn.commit()
+            cmd = "SELECT result FROM OrdersInfo WHERE getDate='%s' and usernumber='%s' and orderInfo='%s'" % (
+                obj[0], obj[1], obj[3]
+            )
+            c.execute(cmd)
+            result = c.fetchone()[0]
+            if result == 'succes!':
+                del orders[orders.index(obj)]
+            else:
+                return
+
+inserterProcess = threading.Thread(target=Inserter, name= 123)
+inserterProcess.start()
+
+if __name__ == '__main__':
+    app.run(debug=True, host='192.168.10.53', port=5002)
