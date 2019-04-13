@@ -1,0 +1,5 @@
+<app-auth *ngIf="!isAuthed"></app-auth>
+<div class="main" *ngIf="isAuthed">
+  <app-dashboard *ngIf="!isAddModal"></app-dashboard>
+  <app-create *ngIf="isAddModal"></app-create>
+</div>

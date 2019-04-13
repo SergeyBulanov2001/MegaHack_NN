@@ -1,0 +1,37 @@
+<div class="header">
+  <div class="header__Left-side">
+    <button class="logout fas fa-sign-out-alt" (click)="logout()"></button>
+    <h2 class="dealer">dealer#<span class="dealer__id">{{ dealerId }}</span></h2>
+  </div>
+  <button (click)="openAddStock()">Создать акцию</button>
+</div>
+<div class="stocks">
+  <h3 class="section__title">Акции</h3>
+  <div class="stock" *ngFor="let stock of stocks" [class.closed]="stock.status === 'closed'">
+    <h4 class="stock__title">{{ stock.stock_name }} <span class="stock__id">{{ '#' + stock.stock_id }}</span></h4>
+    <div class="stock__desc">
+      <ul class="stock__services">
+        <li *ngIf="stock.services.calls">Пакет {{ stock.services.calls }} звонков</li>
+        <li *ngIf="stock.services.sms">Пакет {{ stock.services.sms }} сообщений</li>
+        <li *ngIf="stock.services.internet">Трафик +{{ stock.services.internet }} Гб</li>
+        <li *ngIf="stock.services.sale">Скидка {{ stock.services.sale }}%</li>
+      </ul>
+      <ul class="stock__conditions">
+        <li *ngIf="stock.tariff_name">Тариф: {{ stock.tariff_name }}</li>
+        <li *ngIf="stock.conditions.balance">Баланс: {{ stock.conditions.balance }}</li>
+        <li *ngIf="stock.conditions.lifetime">Дней с момента регистрации: {{ stock.conditions.lifetime }}</li>
+      </ul>
+    </div>
+    <button class="stock__remove" *ngIf="stock.status !== 'closed'" (click)="close(stock.stock_id)">Удалить
+      акцию</button>
+  </div>
+</div>
+<div class="orders">
+  <h3 class="section__title">Заказы</h3>
+
+  <div class="order success" *ngFor="let order of orders">
+    <p class="order__msisdn"><span class="order__date">2019.04.13 20:06:38</span></p>
+    <i class="order__status fas fa-check"></i>
+    <i class="order__status far fa-chevron-square-left"></i>
+  </div>
+</div>
