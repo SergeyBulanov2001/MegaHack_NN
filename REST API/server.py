@@ -17,6 +17,22 @@ c = conn.cursor(buffered=True)
 def web_application():
     pass
 
+@app.route('/api/setaction/<MSISDN>&<dealer_id>&<action_id>')
+def setStock(MSISDN, dealer_id, action_id):
+    checkConditions(MSISDN, dealer_id, action_id)
+
+def checkConditions(MSISDN, dealer_id, action_id):
+    cmd = "SELECT conditions FROM %s WHERE id=%d" % ('stock_'+str(dealer_id), action_id)
+    c.execute(cmd)
+    condition = c.fetchone()[0]
+    print(condition)
+    cmd = "SELECT tariff_id FROM users WHERE MSISDN='%s'" % (MSISDN)
+    c.execute(cmd)
+    tariff_id = c.fetchone()[]
+    cmd = "SELECT * FROM tariffs WHERE tariff_id = %d" %(tariff_id)
+    c.execute(cmd)
+    tariff_conditions = c.fetchone()
+    print(tariff_conditions)
 
 if __name__ == '__main__':
     app.run(debug=True)
