@@ -50,7 +50,6 @@ def stock_add(token, name, services, conditions):
 
 
 def get_tariff_name(id):
-
     try:
         c.execute("SELECT tariff_name FROM Tariffs WHERE tariff_id=%s" % int(json.loads(id)['tariff_id']))
         data = c.fetchall()
@@ -73,14 +72,13 @@ def stock_request(token):
     except:
         return '[]'
 
-    answer = '['
+    answer = []
     for i in data:
-        if answer != '[':
-            answer += ','
-        answer += '{"stock_id":' + str(i[0]) + ',"dealer_id":' + str(i[1]) + ',"stock_name":"' + str(i[2]) + '","services":' + str(i[3]) + ',"conditions":' + str(i[4]) + ',"status":"' + i[5] + '","tariff_name":"' + str(get_tariff_name(i[4])) + '"}'
-    answer += ']'
+        answer.append(
+            {'stock_id': i[0], 'dealer_id': i[1], 'stock_name': i[2], 'services': json.loads(i[3]), 'conditions': json.loads(i[4]), 'status': i[5], 'tariff_name': get_tariff_name(i[4])}
+        )
 
-    return str(answer)
+    return str(answer).replace("'", '"')
 
 
 @app.route('/<token>/closing_stock/<id>', methods=['DELETE', 'GET'])
@@ -114,22 +112,19 @@ def tariffs(token):
 
     return str(answer).replace("'", '"')
 
+
 @app.route('/<token>/orders')
 def requestOrders(token):
     id = check_token(token)[0]
     if id == ():
         return '{"type": "error", "message": "token error"}'
-
-    cmd = "SELECT * FROM OrdersInfo WHERE dealer_id = %d" % int(id)
-    c.execute(cmd)
+    c.execute("SELECT * FROM OrdersInfo WHERE dealer_id = %d" % int(id))
     a = c.fetchall()
     answer = []
     for obj in a:
         answer.append({"id": obj[0], "getDate": obj[1], "usernumber": obj[2], "orderInfo": obj[4], "result": obj[5], "finishDate": obj[6]})
-
     return str(answer).replace("'", '"')
 
-requestOrders('9a2RR8qlrf1i2fu74MJZKnJo5RiSwnV7')
 
 if __name__ == '__main__':
-    app.run(debug=False, host='192.168.10.53', port = 5001)
+    app.run(debug=False)
