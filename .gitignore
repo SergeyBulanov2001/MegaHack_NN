@@ -1,20 +1,20 @@
-# CLIENT
+# admin
 
 
 idea/
 # compiled output
-/client/dist
-/client/tmp
-/client/out-tsc
+/admin/dist
+/admin/tmp
+/admin/out-tsc
 # Only exists if Bazel was run
-/client/bazel-out
+/admin/bazel-out
 
 # dependencies
-client/node_modules
+admin/node_modules
 
 # profiling files
-client/chrome-profiler-events.json
-client/speed-measure-plugin.json
+admin/chrome-profiler-events.json
+admin/speed-measure-plugin.json
 
 # IDEs and editors
 /.idea
@@ -34,14 +34,14 @@ client/speed-measure-plugin.json
 .history/*
 
 # misc
-/client/.sass-cache
-/client/connect.lock
-/client/coverage
-/client/libpeerconnection.log
-client/npm-debug.log
-client/yarn-error.log
-client/testem.log
-/client/typings
+/admin/.sass-cache
+/admin/connect.lock
+/admin/coverage
+/admin/libpeerconnection.log
+admin/npm-debug.log
+admin/yarn-error.log
+admin/testem.log
+/admin/typings
 
 # System Files
 .DS_Store
