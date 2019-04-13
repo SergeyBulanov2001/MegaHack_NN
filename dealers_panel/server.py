@@ -81,5 +81,28 @@ def closing_stock(token, id):
 
     c.execute('' % (nickname[0], id))
 
+
+@app.route('/<token>/tariffs')
+def tariffs(token):
+    nickname = check_token(token)
+    if nickname == ():
+        return '{"type": "error", "message": "token error"}'
+
+    try:
+        c.execute("SELECT tariff_id, tariff_name FROM Tariffs")
+        data = c.fetchall()
+        print(data)
+
+    except:
+        return '[]'
+
+    answer = []
+
+    for i in data:
+        answer.append({"id": i[0], "tariff_name": i[1]})
+
+    return str(answer).replace("'", "'")
+
+
 if __name__ == '__main__':
-    app.run(debug=True, host='192.168.10.53', port=5001)
+    app.run(debug=True)
