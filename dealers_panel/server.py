@@ -44,24 +44,37 @@ def stock_add(token, name, services, conditions):
         return '{"type": "error", "message": "token error"}'
     try:
         c.execute("""
-            CREATE TABLE
-            `stock_%s` (
-            `id` INT(11) NOT NULL AUTO_INCREMENT,
-            'name' TEXT NOT NULL
+                CREATE TABLE
+                `stock_%s` (
+                `name` TEXT NOT NULL,
+                `services` TEXT NOT NULL,
+                `conditions` TEXT NOT NULL,
             
-            PRIMARY KEY(`id`)
-        )""" % nickname)
+                `id` INT(11) NOT NULL AUTO_INCREMENT,
+                PRIMARY KEY(`id`)
+            )""" % nickname[0])
         conn.commit()
     except:
         pass
 
-    c.execute('INSERT INTO `stock_%s` () VALUES ()' % (nickname))
+    c.execute('INSERT INTO `stock_%s`(name, services, conditions) VALUES ("%s", "%s", "%s")' % (nickname[0], name, services, conditions))
     conn.commit()
 
     return '{"type": "success"}'
 
 
+@app.route('/<token>/stock_request', methods=['GET'])
+def stock_request(token):
+    nickname = check_token(token)
+    if nickname == ():
+        return '{"type": "error", "message": "token error"}'
 
+    c.execute("SELECT * FROM stock_%s" % nickname[0])
+    data = c.fetchall()
+    answer = []
+    for i in data:
+        answer.append({'name': i[0], 'services': i[1], 'conditions': i[2], 'id': i[3]})
+    return str(answer)
 
 if __name__ == '__main__':
-    app.run(debug=True, host='192.168.10.53')
+    app.run(debug=True)
