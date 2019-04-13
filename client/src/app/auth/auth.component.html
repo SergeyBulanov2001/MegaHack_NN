@@ -1,0 +1,9 @@
+<div class="auth_wrap">
+  <div class="auth">
+    <h2 class="title">Вход</h2>
+    <p class="error">{{ error }}</p>
+    <input type="text" [(ngModel)]="id" placeholder="ID Дилера" (keyup.enter)="login()">
+    <input type="password" [(ngModel)]="password" placeholder="Пароль" (keyup.enter)="login()">
+    <button (click)="login()">Войти</button>
+  </div>
+</div>
