@@ -43,6 +43,30 @@ admin/yarn-error.log
 admin/testem.log
 /admin/typings
 
+# compiled output
+/client/dist
+/client/tmp
+/client/out-tsc
+# Only exists if Bazel was run
+/client/bazel-out
+
+# dependencies
+client/node_modules
+
+# profiling files
+client/chrome-profiler-events.json
+client/speed-measure-plugin.json
+
+# misc
+/client/.sass-cache
+/client/connect.lock
+/client/coverage
+/client/libpeerconnection.log
+client/npm-debug.log
+client/yarn-error.log
+client/testem.log
+/client/typings
+
 # System Files
 .DS_Store
 Thumbs.db
