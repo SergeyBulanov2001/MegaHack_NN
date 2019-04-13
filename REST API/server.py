@@ -1,7 +1,7 @@
 from flask import Flask, send_from_directory
 from flask_cors import CORS
 
-import mysql.connector
+import mysql.connector, json
 
 app = Flask(__name__)
 CORS(app,  supports_credentials=True)
@@ -21,18 +21,19 @@ def web_application():
 def setStock(MSISDN, dealer_id, stock_id):
     checkConditions(MSISDN, dealer_id, stock_id)
 
-def checkConditions(MSISDN, dealer_id, stock_id):
-    cmd = "SELECT conditions FROM %s WHERE id=%d" % ('stock_'+str(dealer_id), stock_id)
+def checkConditions(MSISDN, stock_id):
+    cmd = 'SELECT conditions FROM Stocks WHERE stock_id = %d' % stock_id
     c.execute(cmd)
-    condition = c.fetchone()[0]
-    print(condition)
-    cmd = "SELECT tariff_id FROM users WHERE MSISDN='%s'" % (MSISDN)
-    c.execute(cmd)
-    tariff_id = c.fetchone()[0]
-    cmd = "SELECT * FROM tariffs WHERE tariff_id = %d" % (tariff_id)
-    c.execute(cmd)
-    tariff_conditions = c.fetchone()
-    print(tariff_conditions)
+    cond = json.loads(c.fetchone()[0])
+    ks = cond.keys()
+    for obj in ks:
+        cmd = "SELECT %s FROM users WHERE MSISDN=%d" % (str(obj), MSISDN)
+        c.execute(cmd)
+        print(obj)
+        print(c.fetchone()[0])
+        #if cond[str(obj)]
+
+checkConditions(9096758988,11)
 
 if __name__ == '__main__':
     app.run(debug=True)

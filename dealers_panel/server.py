@@ -87,4 +87,4 @@ def closing_stock(token, id):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='192.168.10.53', port=5001)
