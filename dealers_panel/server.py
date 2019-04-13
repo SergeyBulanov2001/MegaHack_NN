@@ -77,7 +77,7 @@ def stock_request(token):
     for i in data:
         if answer != '[':
             answer += ','
-        answer += '{"stock_id":' + str(i[0]) + ',"dealer_id":' + str(i[1]) + ',"stock_name":"' + str(i[2]) + '","services":' + str(i[3]) + ',"conditions":' + str(i[4]) + ',"status":"' + i[5] + '","tariff_name":' + str(get_tariff_name(i[4])) + '}'
+        answer += '{"stock_id":' + str(i[0]) + ',"dealer_id":' + str(i[1]) + ',"stock_name":"' + str(i[2]) + '","services":' + str(i[3]) + ',"conditions":' + str(i[4]) + ',"status":"' + i[5] + '","tariff_name":"' + str(get_tariff_name(i[4])) + '"}'
     answer += ']'
 
     return str(answer)
@@ -101,7 +101,6 @@ def tariffs(token):
     try:
         c.execute("SELECT tariff_id, tariff_name FROM Tariffs")
         data = c.fetchall()
-        print(data)
 
     except:
         return '[]'
@@ -114,4 +113,4 @@ def tariffs(token):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='192.168.10.53', port = 5001)

@@ -20,19 +20,20 @@ app = Flask(__name__)
 def addOrderToQuerry(usernumber, dealer_id, orderinfo):
     getDate = datetime.strftime(datetime.now(), "%Y.%m.%d %H:%M:%S")
     orders.append([getDate, usernumber, dealer_id, orderinfo])
+    return 'success'
 
 
 def Inserter():
     while True:
         for obj in orders:
-            failChance = random.randint(9)
+            failChance = random.randint(0,9)
             if failChance == 1:
                 status = 'error!'
             else:
                 status = 'succes!'
 
             cmd = "INSERT INTO OrdersInfo(getDate, usernumber, dealer_id, orderInfo, result) VALUES ('%s', '%s', %d, '%s', '%s')" % (
-                obj[0], obj[1], obj[2], obj[3], obj[4]
+                obj[0], obj[1], int(obj[2]), obj[3], status
             )
             c.execute(cmd)
             conn.commit()
