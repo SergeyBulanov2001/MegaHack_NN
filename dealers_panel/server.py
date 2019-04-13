@@ -37,11 +37,12 @@ def check_token(token):
     return data
 
 
-@app.route('/<token>/stock/name=<name>&<services>&<conditions>', methods=['POST', 'GET'])
+@app.route('/<token>/stock/<name>&<services>&<conditions>', methods=['POST', 'GET'])
 def stock_add(token, name, services, conditions):
     nickname = check_token(token)
     if nickname == ():
         return '{"type": "error", "message": "token error"}'
+
     try:
         c.execute("""
                 CREATE TABLE
@@ -49,7 +50,7 @@ def stock_add(token, name, services, conditions):
                 `name` TEXT NOT NULL,
                 `services` TEXT NOT NULL,
                 `conditions` TEXT NOT NULL,
-            
+                `state` TEXT NOT NULL,
                 `id` INT(11) NOT NULL AUTO_INCREMENT,
                 PRIMARY KEY(`id`)
             )""" % nickname[0])
@@ -57,7 +58,7 @@ def stock_add(token, name, services, conditions):
     except:
         pass
 
-    c.execute('INSERT INTO `stock_%s`(name, services, conditions) VALUES ("%s", "%s", "%s")' % (nickname[0], name, services, conditions))
+    c.execute('INSERT INTO `stock_%s`(name, services, conditions, state) VALUES ("%s", "%s", "%s", "activist")' % (nickname[0], name, services, conditions))
     conn.commit()
 
     return '{"type": "success"}'
@@ -68,13 +69,16 @@ def stock_request(token):
     nickname = check_token(token)
     if nickname == ():
         return '{"type": "error", "message": "token error"}'
-
-    c.execute("SELECT * FROM stock_%s" % nickname[0])
-    data = c.fetchall()
+    try:
+        c.execute("SELECT * FROM stock_%s" % nickname[0])
+        data = c.fetchall()
+    except:
+        return '[]'
     answer = []
     for i in data:
-        answer.append({'name': i[0], 'services': i[1], 'conditions': i[2], 'id': i[3]})
-    return str(answer)
+        answer.append({"name": i[0], "services": i[1], "conditions": i[2], "state": i[3], "id": i[4]})
+    return str(answer).replace("'", '"')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
