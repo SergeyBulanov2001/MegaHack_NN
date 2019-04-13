@@ -49,6 +49,17 @@ def stock_add(token, name, services, conditions):
     return '{"type": "success"}'
 
 
+def get_tariff_name(id):
+
+    try:
+        c.execute("SELECT tariff_name FROM Tariffs WHERE tariff_id=%s" % int(json.loads(id)['tariff_id']))
+        data = c.fetchall()
+        return str(data[0][0])
+
+    except:
+        return None
+
+
 @app.route('/<token>/stock_request', methods=['GET'])
 def stock_request(token):
     nickname = check_token(token)
@@ -58,7 +69,6 @@ def stock_request(token):
     try:
         c.execute("SELECT * FROM Stocks WHERE dealer_id=%s" % nickname[0])
         data = c.fetchall()
-        print(data)
 
     except:
         return '[]'
@@ -67,7 +77,7 @@ def stock_request(token):
     for i in data:
         if answer != '[':
             answer += ','
-        answer += '{"stock_id":' + str(i[0]) + ',"dealer_id":' + str(i[1]) + ',"stock_name":"' + str(i[2]) + '","services":' + str(i[3]) + ',"conditions":' + str(i[4]) + ',"status":"' + i[5] + '"}'
+        answer += '{"stock_id":' + str(i[0]) + ',"dealer_id":' + str(i[1]) + ',"stock_name":"' + str(i[2]) + '","services":' + str(i[3]) + ',"conditions":' + str(i[4]) + ',"status":"' + i[5] + '","tariff_name":' + str(get_tariff_name(i[4])) + '}'
     answer += ']'
 
     return str(answer)
