@@ -17,7 +17,7 @@ c = conn.cursor(buffered=True)
 
 @app.route('/')
 def web_application():
-    pass
+    return ''
 
 
 @app.route('/authorization/<nickname>&<password>')
@@ -37,20 +37,31 @@ def check_token(token):
     return data
 
 
-@app.route('/<token>/stock/<options>', methods=['POST', 'GET'])
-def stock_add(token, options):
-    nickname = check_token(str(token))
-    print(nickname)
+@app.route('/<token>/stock/name=<name>&<services>&<conditions>', methods=['POST', 'GET'])
+def stock_add(token, name, services, conditions):
+    nickname = check_token(token)
     if nickname == ():
-        return str({"type": "error", "message": "token error"})
+        return '{"type": "error", "message": "token error"}'
+    try:
+        c.execute("""
+            CREATE TABLE
+            `stock_%s` (
+            `id` INT(11) NOT NULL AUTO_INCREMENT,
+            'name' TEXT NOT NULL
+            
+            PRIMARY KEY(`id`)
+        )""" % nickname)
+        conn.commit()
+    except:
+        pass
 
-    c.execute("CREATE TABLE '%s'()" % nickname)
+    c.execute('INSERT INTO `stock_%s` () VALUES ()' % (nickname))
     conn.commit()
 
-    return None
+    return '{"type": "success"}'
 
 
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='192.168.42.21')
