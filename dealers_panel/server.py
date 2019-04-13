@@ -1,7 +1,7 @@
 from flask import Flask, send_from_directory
 from flask_cors import CORS
 
-import mysql.connector
+import mysql.connector, json
 
 
 app = Flask(__name__)
@@ -12,7 +12,7 @@ conn = mysql.connector.connect(
             database='case2',
             user='sergey',
             password='IttC79QvArAKoeDe')
-c = conn.cursor(buffered=True)
+c = conn.cursor()
 
 
 @app.route('/')
@@ -43,22 +43,7 @@ def stock_add(token, name, services, conditions):
     if nickname == ():
         return '{"type": "error", "message": "token error"}'
 
-    try:
-        c.execute("""
-                CREATE TABLE
-                `stock_%s` (
-                `name` TEXT NOT NULL,
-                `services` TEXT NOT NULL,
-                `conditions` TEXT NOT NULL,
-                `state` TEXT NOT NULL,
-                `id` INT(11) NOT NULL AUTO_INCREMENT,
-                PRIMARY KEY(`id`)
-            )""" % nickname[0])
-        conn.commit()
-    except:
-        pass
-
-    c.execute('INSERT INTO `stock_%s`(name, services, conditions, state) VALUES ("%s", "%s", "%s", "activist")' % (nickname[0], name, services, conditions))
+    c.execute('INSERT INTO Stocks(dealer_id, stock_name, services, conditions, stats) VALUES (%s, "%s", %s, %s, "available")' % (nickname[0], name, json.dumps(services), json.dumps(conditions)))
     conn.commit()
 
     return '{"type": "success"}'
@@ -69,16 +54,37 @@ def stock_request(token):
     nickname = check_token(token)
     if nickname == ():
         return '{"type": "error", "message": "token error"}'
+
     try:
-        c.execute("SELECT * FROM stock_%s" % nickname[0])
+        c.execute("SELECT * FROM Stocks WHERE dealer_id=%s" % nickname[0])
         data = c.fetchall()
+        print(data)
+
     except:
         return '[]'
-    answer = []
+
+    answer = '['
     for i in data:
-        answer.append({"name": i[0], "services": i[1], "conditions": i[2], "state": i[3], "id": i[4]})
-    return str(answer).replace("'", '"')
+        if answer != '[':
+            answer += ','
+        answer += '{"stock_id":' + str(i[0]) + ',"dealer_id":' + str(i[1]) + ',"stock_name":"' + str(i[2]) + '","services":' + str(i[3]) + ',"conditions":' + str(i[4]) + ',"status":"' + i[5] + '"}'
+    answer += ']'
+
+    return str(answer)
+
+
+@app.route('/<token>/closing_stock/<id>', methods=['DELETE', 'GET'])
+def closing_stock(token, id):
+    nickname = check_token(token)
+    if nickname == ():
+        return '{"type": "error", "message": "token error"}'
+
+    c.execute('' % (nickname[0], id))
+
+
+
+
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='192.168.10.53')
+    app.run(debug=True)
