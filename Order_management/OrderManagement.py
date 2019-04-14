@@ -19,8 +19,8 @@ app = Flask(__name__)
 CORS(app,  supports_credentials=True)
 @app.route('/api/addordertoquerry/usernumber=<usernumber>&dealer_id=<dealer_id>&orderinfo=<orderinfo>')
 def addOrderToQuerry(usernumber, dealer_id, orderinfo):
-    getDate = datetime.strftime(datetime.now(), "%Y.%m.%d %H:%M:%S")
-    orders.append([getDate, usernumber, dealer_id, orderinfo])
+    curDate = datetime.strftime(datetime.now(), "%Y.%m.%d")
+    orders.append([curDate, usernumber, dealer_id, orderinfo])
     return '{"type": "success"}'
 
 

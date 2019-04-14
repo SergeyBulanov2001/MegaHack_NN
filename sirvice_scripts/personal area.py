@@ -46,14 +46,14 @@ def user_request(MSISDN):
         data = c.fetchone()
 
         if data == ():
-            return '{"type": "Error", "message": "Номер не найден"}'
+            return '{"type": "error", "message": "Номер не найден"}'
 
         answer = {'tariff_name': get_tariff_name(data[1]), 'balance': data[3], 'dealer': data[4]}
         return str(answer).replace("'", '"')
 
     except:
-        return '{"type": "Error", "message": "Номер не найден"}'
+        return '{"type": "error", "message": "Номер не найден"}'
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host="192.168.10.53", port=5005)
