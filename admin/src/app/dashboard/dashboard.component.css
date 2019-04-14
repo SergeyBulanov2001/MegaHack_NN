@@ -11,6 +11,11 @@
   margin: 0;
 }
 
+.dealer__id {
+  font-size: 20px;
+  color: rgba(0, 0, 0, 0.2);
+}
+
 button {
   width: 275px;
   padding: 14px;
@@ -74,6 +79,10 @@ button.logout {
   color: #f68077;
 }
 
+.stock.closed .stock__desc {
+  color: #f68077;
+}
+
 .stock.closed .stock__services {
   color: #f68077;
 }
@@ -98,9 +107,11 @@ button.logout {
 }
 
 .stock__desc {
+  margin: 0;
   display: flex;
   justify-content: space-between;
-  margin-top: 25px;
+  margin-top: 15px;
+  word-break: break-word;
 }
 
 .stock__services {
@@ -113,6 +124,7 @@ button.logout {
 
 .stock__services,
 .stock__conditions {
+  width: 48%;
   padding: 0;
   list-style-type: none;
   margin: 0;
@@ -152,7 +164,12 @@ button.logout {
   box-sizing: border-box;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   border-radius: 10px;
+}
+
+.order:not(:first-of-type) {
+  margin-top: 20px;
 }
 
 .order.success {
@@ -181,8 +198,9 @@ button.logout {
   font-size: 15px;
   font-weight: 300;
   margin: 0;
+  margin-left: 10px;
 }
 
 .order__status {
-  font-size: 20px;
+  font-size: 25px;
 }
