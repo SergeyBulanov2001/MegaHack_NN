@@ -37,13 +37,13 @@ def check_token(token):
     return data
 
 
-@app.route('/<token>/stock/<name>&<services>&<conditions>', methods=['POST', 'GET'])
-def stock_add(token, name, services, conditions):
+@app.route('/<token>/stock/<name>&<services>&<conditions>&<description>', methods=['POST', 'GET'])
+def stock_add(token, name, services, conditions, description):
     nickname = check_token(token)
     if nickname == ():
         return '{"type": "error", "message": "token error"}'
 
-    c.execute('INSERT INTO Stocks(dealer_id, stock_name, services, conditions, stats) VALUES (%s, "%s", %s, %s, "available")' % (nickname[0], name, json.dumps(services), json.dumps(conditions)))
+    c.execute('INSERT INTO Stocks(dealer_id, stock_name, services, conditions, stats, description) VALUES (%s, "%s", %s, %s, "available", %s)' % (nickname[0], name, json.dumps(services), json.dumps(conditions), description))
     conn.commit()
 
     return '{"type": "success"}'
@@ -75,9 +75,8 @@ def stock_request(token):
     answer = []
     for i in data:
         answer.append(
-            {'stock_id': i[0], 'dealer_id': i[1], 'stock_name': i[2], 'services': json.loads(i[3]), 'conditions': json.loads(i[4]), 'status': i[5], 'tariff_name': get_tariff_name(i[4])}
+            {'stock_id': i[0], 'dealer_id': i[1], 'stock_name': i[2], 'services': json.loads(i[3]), 'conditions': json.loads(i[4]), 'status': i[5], 'tariff_name': get_tariff_name(i[4]), 'description': i[6]}
         )
-
     return str(answer).replace("'", '"')
 
 
