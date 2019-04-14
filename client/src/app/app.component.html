@@ -1,20 +1,61 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
+<div class="header">
+  <div class="header__title">
+    <i class="icon header__logo"></i>
+    Личный кабинет
+  </div>
+  <div class="header__right-wrap">
+    <div class="header__balance">
+      <i class="icon header__balance-icon"></i>
+      {{ balance }} ₽
+    </div>
+    <div class="header__user">
+      <i class="icon header__user-icon"></i>
+      +7 {{ msisdn }}
+    </div>
+  </div>
 </div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/cli">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
-
+<div class="body">
+  <div class="sidebar">
+    <div class="sidebar__title">Счёт</div>
+    <ul class="sidebar__list">
+      <li>
+        <p class="sidebar__category-name">Доступно на сегодня, {{ date }}</p>
+        <p class="sidebar__category-value">{{ balance }} ₽</p>
+      </li>
+      <li>
+        <p class="sidebar__category-name">Мой номер</p>
+        <p class="sidebar__category-value">+7 {{ msisdn }}</p>
+      </li>
+      <li>
+        <p class="sidebar__category-name">Тариф</p>
+        <p class="sidebar__category-value">{{ tariff }}</p>
+      </li>
+      <li>
+        <p class="sidebar__category-name">Дилер</p>
+        <p class="sidebar__category-value">{{ dealer }}</p>
+      </li>
+    </ul>
+  </div>
+  <div class="main">
+    <h3 class="main__title">Акции</h3>
+    <p class="error">{{error}}</p>
+    <div class="main__list">
+      <ng-container *ngFor="let stock of stocks">
+        <div class="stock" *ngIf="stock.status !== 'closed'">
+          <div class="stock__Left-wrap">
+            <h4 class="stock__title">{{stock.stock_name}}</h4>
+            <p class="stock__desc">{{stock.description}}</p>
+            <pre class="stock__more">{{descTip(stock.services)}}</pre>
+          </div>
+          <button class="stock__connect" (click)="connect(stock.stock_id)">Подключить</button>
+        </div>
+      </ng-container>
+    </div>
+    <h3 class="main__title">Подключённые</h3>
+    <div class="main__list">
+      <div class="stock" *ngFor="let stock of userStocks">
+        <h4 class="stock__title">{{stock.name}}</h4>
+      </div>
+    </div>
+  </div>
+</div>
