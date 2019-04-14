@@ -12,27 +12,33 @@ conn = mysql.connector.connect(
             database='case2',
             user='sergey',
             password='IttC79QvArAKoeDe')
-c = conn.cursor(buffered=True)
+c = conn.cursor()
 
 @app.route('/')
 def web_application():
     pass
 
-@app.route('/api/setstock/<MSISDN>&<dealer_id>&<stock_id>')
+@app.route('/api/stock/add/<MSISDN>&<dealer_id>&<stock_id>')
 def setStock(MSISDN, dealer_id,stock_id):
+    conn.cmd_reset_connection()
     orderInfo = GetStockName(stock_id)
     cc = checkConditions(MSISDN, stock_id)
+    print(cc)
     ce = checkExistence(MSISDN, orderInfo)
+    print(ce)
     cd = checkDealer(MSISDN, dealer_id)
-
+    print(cd)
     if cc and ce and cd:
-        response = urllib.request.urlopen('http://192.168.10.53:5002/api/addordertoquerry/usernumber=%s&dealer_id=%s&orderinfo=%s'%(MSISDN, dealer_id, orderInfo))
-        return(response.read())
+        response = urllib.request.urlopen('http://192.168.10.53:5002/api/addordertoquerry/usernumber=%s&dealer_id=%s&orderinfo=%s'%(MSISDN, dealer_id, str(orderInfo).encode('utf-8')))
+        addStocksToUser(MSISDN,stock_id)
+        print(response)
+        return ('{"type": "success", "message": "Пользователь успешно создан"}')
     else:
-        return('{"type": error, "message": "Данные пользователя не совпадают с условиями услуги/Он уже зарегистрирован/Выбран не ваш диллер"}')
+        return('{"type": "error", "message": "Данные пользователя не совпадают с условиями услуги/Он уже зарегистрирован/Выбран не ваш диллер"}')
 
-@app.route('/api/checkstock/<MSISDN>')
+@app.route('/api/stock/status/<MSISDN>')
 def checkStock(MSISDN):
+    conn.cmd_reset_connection()
     cmd = "SELECT * FROM OrdersInfo WHERE usernumber = %d" % str(MSISDN)
     c.execute(cmd)
     data = c.fetchall()
@@ -62,8 +68,48 @@ def checkConditions(MSISDN, stock_id):
             if bd >= cond[obj]:
                 continue
             else:
+                print(obj)
+                print(str(bd) + '  ' + str(cond[obj]))
                 return False
     return True
+
+def addStocksToUser(MSISDN, stock_id):
+    conn.cmd_reset_connection()
+    cmd = "SELECT connected_stocks FROM users WHERE MSISDN=%d" % int(MSISDN)
+    c.execute(cmd)
+    connected_stocks = c.fetchone()
+    print(connected_stocks[0])
+    if connected_stocks[0] == 'null':
+        toadd = "{'stocks': [%d]}" % int(stock_id)
+        toadd = str(toadd).replace("'", '"')
+        print(json.dumps(toadd))
+        cmd = "UPDATE users SET connected_stocks='%s' WHERE MSISDN = %d" % (toadd, int(MSISDN))
+        c.execute(cmd)
+        conn.commit()
+        return '{"type": "success", "message":"Пользователь успешно зарегистрирован"}'
+    else:
+        connected_stocks = connected_stocks[0]
+        arr = json.loads(str(connected_stocks))['stocks']
+        if stock_id in arr:
+            return 'error'
+
+        arr.append(int(stock_id))
+        toadd = '{"stocks": %s}' % arr
+        cmd = "UPDATE users SET connected_stocks='%s' WHERE MSISDN = %d" % (toadd, int(MSISDN))
+        c.execute(cmd)
+        conn.commit()
+        return '{"type": "success", "message":"Пользователь успешно зарегистрирован"}'
+
+@app.route('/api/stock/get/<MSISDN>')
+def getUserStocks(MSISDN):
+    conn.cmd_reset_connection()
+    cmd = "SELECT connected_stocks FROM users WHERE MSISDN=%d" % int(MSISDN)
+    c.execute(cmd)
+    matching = c.fetchone()
+    if matching[0] == 'null':
+        return '{"type": "error", "message": "У пользователя нет подключеныйх акций"}'
+    answer = json.loads(matching[0])
+    return '{"type": "success", "message": %s}' % answer["stocks"]
 
 def checkExistence(MSISDN, orderInfo):
     cmd = 'SELECT usernumber FROM OrdersInfo WHERE usernumber = %d AND orderInfo = "%s"' % (int(MSISDN), orderInfo)
@@ -74,20 +120,20 @@ def checkExistence(MSISDN, orderInfo):
         return True
 
 def checkDealer(MSISDN, dealer_id):
-    cmd = 'SELECT dealer FROM users WHERE MSISDN = %d' % (MSISDN)
+    cmd = 'SELECT dealer FROM users WHERE MSISDN = %d' % int(MSISDN)
     c.execute(cmd)
     id = c.fetchone()[0]
-    if id == dealer_id:
+    print(id)
+    print(dealer_id)
+    if int(id) == int(dealer_id):
         return True
     else:
         return False
 
 def GetStockName(stock_id):
-    cmd = 'SELECT stock_name FROM Stocks WHERE stock_id = %d' %stock_id
+    cmd = 'SELECT stock_name FROM Stocks WHERE stock_id = %d' % int(stock_id)
     c.execute(cmd)
-    return c.fetchone()[0]
-
-checkConditions(9957789408, 3)
+    return c.fetchone()
 
 if __name__ == '__main__':
     app.run(debug=True, host='192.168.10.53')

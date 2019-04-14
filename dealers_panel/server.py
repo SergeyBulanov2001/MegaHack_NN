@@ -8,7 +8,7 @@ conn = mysql.connector.connect(
     database='case2',
     user='sergey',
     password='IttC79QvArAKoeDe')
-c = conn.cursor(buffered=True)
+c = conn.cursor()
 
 app = Flask(__name__)
 CORS(app,  supports_credentials=True)
@@ -37,6 +37,7 @@ def check_token(token):
 
 @app.route('/<token>/stock/<name>&<services>&<conditions>&<description>', methods=['POST', 'GET'])
 def stock_add(token, name, services, conditions, description):
+    conn.cmd_reset_connection()
     nickname = check_token(token)
     if nickname == ():
         return '{"type": "error", "message": "token error"}'
@@ -59,6 +60,7 @@ def get_tariff_name(id):
 
 @app.route('/<token>/stock_request', methods=['GET'])
 def stock_request(token):
+    conn.cmd_reset_connection()
     nickname = check_token(token)
     if nickname == ():
         return '{"type": "error", "message": "token error"}'
@@ -80,6 +82,7 @@ def stock_request(token):
 
 @app.route('/<token>/closing_stock/<id>', methods=['DELETE', 'GET'])
 def closing_stock(token, id):
+    conn.cmd_reset_connection()
     nickname = check_token(token)
     if nickname == ():
         return '{"type": "error", "message": "token error"}'
@@ -92,6 +95,7 @@ def closing_stock(token, id):
 
 @app.route('/<token>/tariffs')
 def tariffs(token):
+    conn.cmd_reset_connection()
     nickname = check_token(token)
     if nickname == ():
         return '{"type": "error", "message": "token error"}'
@@ -113,6 +117,7 @@ def tariffs(token):
 
 @app.route('/<token>/orders')
 def requestOrders(token):
+    conn.cmd_reset_connection()
     time.sleep(0.01)
     id = check_token(token)
     cmd = "SELECT * FROM OrdersInfo WHERE dealer_id = %d" % int(id[0])
