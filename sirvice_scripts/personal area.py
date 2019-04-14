@@ -17,10 +17,9 @@ CORS(app,  supports_credentials=True)
 
 
 def get_tariff_name(id):
-    c.execute("SELECT tariff_name FROM Tariffs WHERE tariff_id=%s" % json.loads(id)['tariff_id'])
+    c.execute("SELECT tariff_name FROM Tariffs WHERE tariff_id=%s" % id)
     data = c.fetchone()
     return str(data[0])
-
 
 
 @app.route('/stock_request/<dealer_id>')
@@ -34,7 +33,7 @@ def stock_request(dealer_id):
     answer = []
     for i in data:
         answer.append(
-            {'stock_id': i[0], 'dealer_id': i[1], 'stock_name': i[2], 'services': json.loads(i[3]), 'conditions': json.loads(i[4]), 'status': i[5], 'tariff_name': get_tariff_name(i[4]), 'description': i[6]}
+            {'stock_id': i[0], 'dealer_id': i[1], 'stock_name': i[2], 'services': json.loads(i[3]), 'conditions': json.loads(i[4]), 'status': i[5], 'tariff_name': get_tariff_name(json.loads(i[4])['tariff_id']), 'description': i[6]}
         )
     return str(answer).replace("'", '"')
 
@@ -56,4 +55,4 @@ def user_request(MSISDN):
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host="192.168.10.53", port=5005)
+    app.run(debug=True)
