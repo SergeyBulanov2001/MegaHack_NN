@@ -17,13 +17,10 @@ CORS(app,  supports_credentials=True)
 
 
 def get_tariff_name(id):
-    try:
-        c.execute("SELECT tariff_name FROM Tariffs WHERE tariff_id=%s" % int(id))
-        data = c.fetchall()
-        return str(data[0][0])
+    c.execute("SELECT tariff_name FROM Tariffs WHERE tariff_id=%s" % json.loads(id)['tariff_id'])
+    data = c.fetchone()
+    return str(data[0])
 
-    except:
-        return None
 
 
 @app.route('/stock_request/<dealer_id>')
@@ -44,7 +41,6 @@ def stock_request(dealer_id):
 
 @app.route('/user_request/<MSISDN>', methods=['GET'])
 def user_request(MSISDN):
-    print(12)
     try:
         c.execute("SELECT * FROM users WHERE MSISDN=%s" % MSISDN)
         data = c.fetchone()
