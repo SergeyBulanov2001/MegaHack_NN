@@ -2,6 +2,7 @@ import mysql.connector
 from datetime import datetime
 from flask import Flask
 from flask_cors import CORS
+
 import random, threading
 
 conn = mysql.connector.connect(
@@ -15,12 +16,12 @@ c = conn.cursor(buffered=True)
 orders = []
 
 app = Flask(__name__)
-
+CORS(app,  supports_credentials=True)
 @app.route('/api/addordertoquerry/usernumber=<usernumber>&dealer_id=<dealer_id>&orderinfo=<orderinfo>')
 def addOrderToQuerry(usernumber, dealer_id, orderinfo):
     getDate = datetime.strftime(datetime.now(), "%Y.%m.%d %H:%M:%S")
     orders.append([getDate, usernumber, dealer_id, orderinfo])
-    return 'success'
+    return '{"type": "success"}'
 
 
 def Inserter():
@@ -28,21 +29,21 @@ def Inserter():
         for obj in orders:
             failChance = random.randint(0,9)
             if failChance == 1:
-                status = 'error!'
+                status = 'error'
             else:
-                status = 'succes!'
+                status = 'success'
 
             cmd = "INSERT INTO OrdersInfo(getDate, usernumber, dealer_id, orderInfo, result, finishDate) VALUES ('%s', '%s', %d, '%s', '%s', '%s')" % (
                 obj[0], obj[1], int(obj[2]), obj[3], status, datetime.strftime(datetime.now(), "%Y.%m.%d %H:%M:%S")
             )
             c.execute(cmd)
-            conn.commit()
             cmd = "SELECT result FROM OrdersInfo WHERE getDate='%s' and usernumber='%s' and orderInfo='%s'" % (
                 obj[0], obj[1], obj[3]
             )
             c.execute(cmd)
+            conn.commit()
             result = c.fetchone()[0]
-            if result == 'succes!':
+            if result == 'success':
                 del orders[orders.index(obj)]
             else:
                 return

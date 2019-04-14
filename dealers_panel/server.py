@@ -1,18 +1,17 @@
-from flask import Flask, send_from_directory
+from flask import Flask
 from flask_cors import CORS
 
-import mysql.connector, json
+import mysql.connector, json,time
 
+conn = mysql.connector.connect(
+    host='192.168.10.53',
+    database='case2',
+    user='sergey',
+    password='IttC79QvArAKoeDe')
+c = conn.cursor(buffered=True)
 
 app = Flask(__name__)
 CORS(app,  supports_credentials=True)
-
-conn = mysql.connector.connect(
-            host='192.168.10.53',
-            database='case2',
-            user='sergey',
-            password='IttC79QvArAKoeDe')
-c = conn.cursor()
 
 
 @app.route('/')
@@ -24,7 +23,6 @@ def web_application():
 def authorization(nickname, password):
     c.execute("SELECT  * FROM dealers WHERE (nickname=%s and passwd='%s')" % (nickname, password))
     data = c.fetchone()
-
     if data == None:
         return '{"type": "error", "message":"Неправильный логин или пароль"}'
 
@@ -43,7 +41,7 @@ def stock_add(token, name, services, conditions, description):
     if nickname == ():
         return '{"type": "error", "message": "token error"}'
 
-    c.execute('INSERT INTO Stocks(dealer_id, stock_name, services, conditions, stats, description) VALUES (%s, "%s", %s, %s, "available", %s)' % (nickname[0], name, json.dumps(services), json.dumps(conditions), description))
+    c.execute('INSERT INTO Stocks(dealer_id, stock_name, services, conditions, stats, description) VALUES (%s, "%s", %s, %s, "available", "%s")' % (nickname[0], name, json.dumps(services), json.dumps(conditions), description))
     conn.commit()
 
     return '{"type": "success"}'
@@ -64,13 +62,13 @@ def stock_request(token):
     nickname = check_token(token)
     if nickname == ():
         return '{"type": "error", "message": "token error"}'
+    print(nickname)
+    #try:
+    c.execute("SELECT * FROM Stocks WHERE dealer_id=%s" % nickname[0])
+    data = c.fetchall()
 
-    try:
-        c.execute("SELECT * FROM Stocks WHERE dealer_id=%s" % nickname[0])
-        data = c.fetchall()
-
-    except:
-        return '[]'
+    """except:
+        return '[]'"""
 
     answer = []
     for i in data:
@@ -101,6 +99,7 @@ def tariffs(token):
     try:
         c.execute("SELECT tariff_id, tariff_name FROM Tariffs")
         data = c.fetchall()
+        conn.commit()
 
     except:
         return '[]'
@@ -114,16 +113,19 @@ def tariffs(token):
 
 @app.route('/<token>/orders')
 def requestOrders(token):
-    id = check_token(token)[0]
-    if id == ():
-        return '{"type": "error", "message": "token error"}'
-    c.execute("SELECT * FROM OrdersInfo WHERE dealer_id = %d" % int(id))
-    a = c.fetchall()
+    time.sleep(0.01)
+    id = check_token(token)
+    cmd = "SELECT * FROM OrdersInfo WHERE dealer_id = %d" % int(id[0])
+    c.execute(cmd)
+    data = c.fetchall()
     answer = []
-    for obj in a:
-        answer.append({"id": obj[0], "getDate": obj[1], "usernumber": obj[2], "orderInfo": obj[4], "result": obj[5], "finishDate": obj[6]})
-    return str(answer).replace("'", '"')
+    for obj in data:
+        answer.append({"id": obj[0], "getDate": obj[1], "usernumber": obj[2], "dealer_id": obj[3], "orderInfo": obj[4], "result": obj[5], "finishDate": obj[6]})
+    print(str(answer).replace("'", '"'))
+    return (str(answer).replace("'", '"'))
+
+requestOrders('WmZoKEZ7XzJ1Y0xjPPpHhY2EN7e6TxtQ')
 
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=False, host='192.168.10.53', port=5001)

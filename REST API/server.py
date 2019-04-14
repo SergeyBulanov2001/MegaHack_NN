@@ -1,4 +1,4 @@
-from flask import Flask, send_from_directory
+from flask import Flask
 from flask_cors import CORS
 
 import mysql.connector, json, urllib
@@ -17,7 +17,7 @@ c = conn.cursor(buffered=True)
 def web_application():
     pass
 
-@app.route('/api/setaction/<MSISDN>&<dealer_id>&<stock_id>')
+@app.route('/api/setstock/<MSISDN>&<dealer_id>&<stock_id>')
 def setStock(MSISDN, dealer_id,stock_id):
     cc = checkConditions(MSISDN, stock_id)
     ce = checkExistence(MSISDN)
@@ -25,7 +25,18 @@ def setStock(MSISDN, dealer_id,stock_id):
         response = urllib.request.urlopen('http://192.168.10.53:5002/api/addordertoquerry/usernumber=%s&dealer_id=%s&orderinfo=%s'%(MSISDN, dealer_id, 'Wht?'))
         return(response.read())
     else:
-        return('Данные пользователя не совпадают с условиями услуги или он уе зарегистрирован')
+        return('{"type": error, "message": "Данные пользователя не совпадают с условиями услуги или он уе зарегистрирован"}')
+
+@app.route('/api/checkstock/<MSISDN>')
+def checkStock(MSISDN):
+    cmd = "SELECT * FROM OrdersInfo WHERE usernumber = %d" % str(MSISDN)
+    c.execute(cmd)
+    data = c.fetchall()
+    answer = []
+    for obj in data:
+        answer.append({"id": obj[0], "creationDate": obj[1], "MSISDN": int(obj[2]), "dealer_id": obj[3], "result": obj[5], "finishDate": obj[6]})
+    print(str(answer).replace("'", '"'))
+    return (str(answer).replace("'", '"'))
 
 def checkConditions(MSISDN, stock_id):
     cmd = 'SELECT conditions FROM Stocks WHERE stock_id = %d' % int(stock_id)
