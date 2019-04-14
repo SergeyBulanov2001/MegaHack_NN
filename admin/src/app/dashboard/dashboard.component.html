@@ -1,7 +1,7 @@
 <div class="header">
   <div class="header__Left-side">
     <button class="logout fas fa-sign-out-alt" (click)="logout()"></button>
-    <h2 class="dealer">dealer#<span class="dealer__id">{{ dealerId }}</span></h2>
+    <h2 class="dealer">Диллер <span class="dealer__id">{{ '#' + dealerId }}</span></h2>
   </div>
   <button (click)="openAddStock()">Создать акцию</button>
 </div>
@@ -9,6 +9,7 @@
   <h3 class="section__title">Акции</h3>
   <div class="stock" *ngFor="let stock of stocks" [class.closed]="stock.status === 'closed'">
     <h4 class="stock__title">{{ stock.stock_name }} <span class="stock__id">{{ '#' + stock.stock_id }}</span></h4>
+    <p class="stock__desc">{{ stock.description }}</p>
     <div class="stock__desc">
       <ul class="stock__services">
         <li *ngIf="stock.services.calls">Пакет {{ stock.services.calls }} звонков</li>
@@ -29,9 +30,11 @@
 <div class="orders">
   <h3 class="section__title">Заказы</h3>
 
-  <div class="order success" *ngFor="let order of orders">
-    <p class="order__msisdn"><span class="order__date">2019.04.13 20:06:38</span></p>
-    <i class="order__status fas fa-check"></i>
-    <i class="order__status far fa-chevron-square-left"></i>
+  <div class="order success" [class.success]="order.result === 'success'" [class.error]="order.result === 'error'"
+    *ngFor="let order of orders">
+    <p class="order__msisdn">{{ order.usernumber }}<span class="order__date">
+        {{ order.finishDate }}</span></p>
+    <i class="order__status fas fa-check" *ngIf="order.result === 'success'"></i>
+    <i class="order__status far fa-chevron-square-left" *ngIf="order.result === 'error'"></i>
   </div>
 </div>

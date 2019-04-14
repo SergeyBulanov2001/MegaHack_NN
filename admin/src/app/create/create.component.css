@@ -2,6 +2,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 50%;
 }
 
 .dealer {
@@ -11,10 +12,17 @@
   margin: 0;
 }
 
+.dealer__id {
+  font-size: 20px;
+  color: rgba(0, 0, 0, 0.2);
+}
+
 .header__title {
   font-size: 25px;
   font-weight: 600;
   margin: 0;
+  white-space: nowrap;
+  margin-left: 20px;
 }
 
 .error {
@@ -33,7 +41,41 @@
 .name__title {
   margin: 0;
   font-weight: 600;
-  font-size: 25px;
+  font-size: 23px;
+}
+
+.desc {
+  margin-top: 20px;
+  display: flex;
+  align-items: flex-start;
+  width: 50%;
+}
+
+.desc__title {
+  margin: 0;
+  font-weight: 600;
+  font-size: 23px;
+  line-height: 16px;
+}
+
+.desc__field {
+  resize: none;
+  height: 100px;
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  border: 1px solid #dbe2ea;
+  border-radius: 4px;
+  display: block;
+  margin: 0 auto;
+  outline: none;
+  transition: border 0.2s;
+  margin-left: 25px;
+  font-family: "Open Sans";
+}
+
+.desc__field:focus {
+  border-color: #389df7;
 }
 
 .services {
@@ -54,7 +96,7 @@
 
 .section__title {
   margin: 0;
-  font-size: 25px;
+  font-size: 23px;
   font-weight: 600;
   margin-bottom: 30px;
 }

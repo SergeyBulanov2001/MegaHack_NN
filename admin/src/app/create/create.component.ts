@@ -19,6 +19,7 @@ export class CreateComponent implements OnInit {
   error: string;
 
   name: string;
+  desc: string;
 
   isCalls: boolean = false;
   calls: string;
@@ -68,6 +69,11 @@ export class CreateComponent implements OnInit {
       return;
     }
 
+    if (!this.desc) {
+      this.error = "Введите описание акции";
+      return;
+    }
+
     if (!this.isCalls && !this.isSMS && !this.isInternet && !this.isSale) {
       this.error = "Выберите подключаемые услуги";
       return;
@@ -99,6 +105,10 @@ export class CreateComponent implements OnInit {
         this.error = "Введите подключённые услуги";
         return;
       }
+      if (parseInt(this.sale) > 100) {
+        this.error = "Скидка не может быть больше 100%";
+        return;
+      }
       services.sale = parseInt(this.sale);
     }
 
@@ -111,7 +121,7 @@ export class CreateComponent implements OnInit {
 
     const token = this.store.selectSnapshot(DealerState.token);
 
-    this.http.get(`http://192.168.10.53:5001/${token}/stock/${this.name}&${JSON.stringify(services)}&${JSON.stringify(conditions)}`).subscribe((data: any) => {
+    this.http.get(`http://192.168.10.53:5001/${token}/stock/${this.name}&${JSON.stringify(services)}&${JSON.stringify(conditions)}&${this.desc}`).subscribe((data: any) => {
       console.log(data);
       if (data.type == "success") {
         // TODO Вывод акций

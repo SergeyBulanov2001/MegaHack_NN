@@ -1,14 +1,18 @@
 <div class="header">
   <div class="header__Left-side">
-    <button class="logout fas fa-sign-out-alt" (click)="logout()"></button>
-    <h2 class="dealer">dealer#<span class="dealer__id">{{ dealerId }}</span></h2>
+    <button class="header__back fas fa-arrow-left" (click)="back()"></button>
+    <h2 class="header__title">Создание акции</h2>
   </div>
-  <h2 class="header__title">Создание акции</h2>
+  <div></div>
 </div>
 <p class="error">{{ error }}</p>
 <div class="name">
   <h3 class="name__title">Название</h3>
   <input type="text" [(ngModel)]="name">
+</div>
+<div class="desc">
+  <h3 class="desc__title">Описание</h3>
+  <textarea [(ngModel)]="desc" class="desc__field"></textarea>
 </div>
 <div class="services">
   <h3 class="section__title">Услуги</h3>
