@@ -11,7 +11,7 @@ conn = mysql.connector.connect(
     user='sergey',
     password='IttC79QvArAKoeDe')
 
-c = conn.cursor(buffered=True)
+c = conn.cursor()
 
 orders = []
 
