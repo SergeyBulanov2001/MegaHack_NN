@@ -46,7 +46,7 @@ export class CreateComponent implements OnInit {
   ngOnInit() {
     const token = this.store.selectSnapshot(DealerState.token);
 
-    this.http.get(`http://192.168.10.53:5001/${token}/tariffs`).subscribe((data: any) => {
+    this.http.get(`http://95.79.50.190:5001/${token}/tariffs`).subscribe((data: any) => {
       console.log(data);
       this.tariffs = data;
       // if (data.type == "success") {
@@ -121,7 +121,7 @@ export class CreateComponent implements OnInit {
 
     const token = this.store.selectSnapshot(DealerState.token);
 
-    this.http.get(`http://192.168.10.53:5001/${token}/stock/${this.name}&${JSON.stringify(services)}&${JSON.stringify(conditions)}&${this.desc}`).subscribe((data: any) => {
+    this.http.get(`http://95.79.50.190:5001/${token}/stock/${this.name}&${JSON.stringify(services)}&${JSON.stringify(conditions)}&${this.desc}`).subscribe((data: any) => {
       console.log(data);
       if (data.type == "success") {
         // TODO Вывод акций

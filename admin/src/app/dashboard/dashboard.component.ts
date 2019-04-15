@@ -33,7 +33,7 @@ export class DashboardComponent implements OnInit {
   getStocks() {
     const token = this.store.selectSnapshot(DealerState.token);
 
-    this.http.get(`http://192.168.10.53:5001/${token}/stock_request`).subscribe((data: any) => {
+    this.http.get(`http://95.79.50.190:5001/${token}/stock_request`).subscribe((data: any) => {
       console.log(data);
       data.sort((a, b) => {
         if (a.status === 'available' && b.status === 'closed') {
@@ -53,7 +53,7 @@ export class DashboardComponent implements OnInit {
   getOrders() {
     const token = this.store.selectSnapshot(DealerState.token);
 
-    this.http.get(`http://192.168.10.53:5001/${token}/orders`).subscribe((data: any) => {
+    this.http.get(`http://95.79.50.190:5001/${token}/orders`).subscribe((data: any) => {
       console.log(data);
 
       this.orders = data;
@@ -74,7 +74,7 @@ export class DashboardComponent implements OnInit {
   close(id) {
     const token = this.store.selectSnapshot(DealerState.token);
 
-    this.http.get(`http://192.168.10.53:5001/${token}/closing_stock/${id}`).subscribe((data: any) => {
+    this.http.get(`http://95.79.50.190:5001/${token}/closing_stock/${id}`).subscribe((data: any) => {
       console.log(data);
       this.getStocks();
     });

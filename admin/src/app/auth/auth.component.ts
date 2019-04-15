@@ -24,7 +24,7 @@ export class AuthComponent implements OnInit {
     if (this.id.length === 0) { this.error = 'Введите ID'; return; };
     if (this.password.length === 0) { this.error = 'Введите пароль'; return; };
 
-    this.http.get(`http://192.168.10.53:5001/authorization/${this.id}&${this.password}`).subscribe((data: any) => {
+    this.http.get(`http://95.79.50.190:5001/authorization/${this.id}&${this.password}`).subscribe((data: any) => {
       console.log(data);
       if (data.type === 'success') {
         this.store.dispatch(new SetToken(data.token));

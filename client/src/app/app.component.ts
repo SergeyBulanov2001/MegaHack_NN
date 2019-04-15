@@ -38,7 +38,7 @@ export class AppComponent {
 
   getInfo(msisdn) {
     this.msisdn = msisdn.slice(0, 3) + ' ' + msisdn.slice(3, 6) + ' ' + msisdn.slice(6, 8) + ' ' + msisdn.slice(8, 10);
-    this.http.get(`http://192.168.10.53:5005/user_request/${msisdn}`).subscribe((data: any) => {
+    this.http.get(`http://95.79.50.190:5005/user_request/${msisdn}`).subscribe((data: any) => {
       console.log(data);
       if (data.type === 'error') {
         alert('MSISDN введён неверно.');
@@ -53,7 +53,7 @@ export class AppComponent {
   }
 
   getAllStocks() {
-    this.http.get(`http://192.168.10.53:5005/stock_request/${this.dealer}`).subscribe((data: any) => {
+    this.http.get(`http://95.79.50.190:5005/stock_request/${this.dealer}`).subscribe((data: any) => {
       console.log(data);
       this.stocks = data;
       this.getUserStocks();
@@ -61,7 +61,7 @@ export class AppComponent {
   }
 
   getUserStocks() {
-    this.http.get(`http://192.168.10.53:5000/api/stock/get/${this.techMsis}`).subscribe((data: any) => {
+    this.http.get(`http://95.79.50.190:5000/api/stock/get/${this.techMsis}`).subscribe((data: any) => {
       console.log(data);
       this.userStocksId = data;
       let newArr = [];
@@ -84,7 +84,7 @@ export class AppComponent {
   }
 
   connect(id) {
-    this.http.get(`http://192.168.10.53:5000/api/stock/add/${this.techMsis}&${this.dealer}&${id}`).subscribe((data: any) => {
+    this.http.get(`http://95.79.50.190:5000/api/stock/add/${this.techMsis}&${this.dealer}&${id}`).subscribe((data: any) => {
       console.log(data);
       if (data.type === 'error') {
         this.error = data.message;
